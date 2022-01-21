@@ -1,0 +1,169 @@
+swagger: "2.0"
+info:
+  title: апи сервиса
+  description: Title
+  version: 1.0.0
+paths:
+  /groups:
+    get:
+      tags:
+      - "groupApi"
+      summary: "Get groups by ids"
+      description: "Ендпоинт для получения информации по указанным группам"
+      operationId: "getGroups"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "groupIds"
+        in: "query"
+        description: "Список идентификаторов групп, по которым необходимо отдать информацию"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+      responses:
+        200:
+           description: "Найденные группы"
+           schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/group"
+        404:
+            description: "Группы с запрошенными идентификаторами не найдены"
+
+  /users:
+    get:
+      tags:
+        - "userApi"
+      summary: "Get users by login"
+      description: "Ендпоинт для получения информации по указанным логинам пользователей"
+      operationId: "getUsers"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "logins"
+          in: "query"
+          description: "Список логинов пользователей, по которым необходимо отдать информацию"
+          required: true
+          type: "array"
+          items:
+            type: "string"
+      responses:
+        200:
+          description: "Найденные пользователи"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/user"
+        404:
+          description: "Пользователи с запрошенными логинами не найдены"
+
+  /reports:
+    post:
+      tags:
+        - "reportApi"
+      summary: "Finds users by "
+      description: "Ендпоинт для отправки отчета"
+      operationId: "saveReport"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "Список пользователей, по которым необходимо отдать информацию"
+          required: true
+          schema:
+            $ref: "#/definitions/report"
+        - name: "targetGroups"
+          in: "query"
+          description: "Идентификаторы групп для отправки отчета"
+          required: true
+          type: "array"
+          items:
+            type: "string"
+      responses:
+        200:
+          description: "В случае успеха"
+        400:
+          description: "Ошибка"
+    get:
+      tags:
+        - "reportApi"
+      summary: "Get report by login"
+      description: "Ендпоинт для получения отчетов по указанному логину"
+      operationId: "getReport"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "login"
+          in: "query"
+          description: "Логин пользователя"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Найденные отчеты"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/report"
+        404:
+          description: "Отчеты не найдены"
+
+definitions:
+  group:
+    type: "object"
+    description: "Информация о группе"
+    properties:
+      id:
+        type: "string"
+        description: "Идентификатор группы"
+      isActive:
+        type: "boolean"
+        description: "Признак активности группы"
+      creationDate:
+        type: "string"
+        format: "date"
+        description: "Дата создания"
+      lastUpdatingDate:
+        type: "string"
+        format: "date"
+        description: "Дата последнего обновления"
+      deactivatingDate:
+        type: "string"
+        format: "date"
+        description: "Дата отключения группы"
+      userEmails:
+        type: "array"
+        description: "Почты пользователей"
+        items:
+          type: "string"
+
+  user:
+    type: "object"
+    description: "Информация о пользователе"
+    properties:
+      email:
+        type: "string"
+        description: "Почта"
+      login:
+        type: "string"
+        description: "Логин"
+      isActive:
+        type: "boolean"
+        description: "Признак активности"
+      groupIds:
+        type: "array"
+        description: "Идентификаторы групп"
+        items:
+          type: "string"
+
+  report:
+    type: "object"
+    description: "Отчет"
+    properties:
+      someReportData:
+        type: "string"
+        description: "Данные отчета"
